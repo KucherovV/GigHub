@@ -1,0 +1,2 @@
+c:\users\user\source\repos\GigHub1\GigHub1.Tests\obj\Debug\GigHub1.Tests.csprojResolveAssemblyReference.cache
+c:\users\user\source\repos\GigHub1\GigHub1.Tests\obj\Debug\GigHub1.Tests.csproj.CoreCompileInputs.cache

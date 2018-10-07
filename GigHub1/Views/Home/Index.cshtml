@@ -1,0 +1,38 @@
+﻿@model IEnumerable<GigHub1.Models.Gig>
+@using System.Globalization;
+@{
+    ViewBag.Title = "Home Page";
+    <link href="~/Content/Site.css" rel="stylesheet" />
+}
+
+<ul class="gigs">
+    @foreach (var gig in Model)
+    {
+        <li>
+            <div class="date" >
+                <div class="month">
+                    @gig.DateTime.ToString("MMM", new CultureInfo("en-EN"))
+                </div>
+                <div class="day">
+                    @gig.DateTime.ToString("d ")
+                </div>
+            </div>
+            <button class="btn btn-default btn-sm">
+                Going?
+            </button>
+            <div class="details">
+                <span class="artist">
+                    @gig.Artist.Name
+                </span>
+                <span class="genre">
+                    @gig.Genre.Name
+                </span>
+                <span class="venue">
+                    @gig.Venue
+                </span>
+                
+            </div>     
+            <hr />
+        </li>
+    }
+</ul>
