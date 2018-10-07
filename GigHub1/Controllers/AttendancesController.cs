@@ -2,6 +2,8 @@
 using System.Web.Http;
 using GigHub1.Models;
 using Microsoft.AspNet.Identity;
+using GigHub1.Dtos;
+using System.Data.Entity;
 
 namespace GigHub1.Controllers
 {
@@ -11,22 +13,36 @@ namespace GigHub1.Controllers
         private ApplicationDbContext _context = new ApplicationDbContext();
 
         [HttpPost]
-        public IHttpActionResult Attend([FromBody]int gigId)
+        public IHttpActionResult Attend(AttendanceDto dto)
         {
             var userId = User.Identity.GetUserId();
 
-            if(_context.Attendances.Any(a => a.AttendeeId == userId && a.GigId == gigId))
+            Attendance attendance;
+            var gigId = dto.GigId;
+
+            if (_context.Attendances.Any(a => a.AttendeeId == userId && a.GigId == gigId))
             {
-                return BadRequest("Attendance already exists");
+                attendance = new Attendance
+                {
+                    Attendee = _context.Users.Find(userId),
+                    Gig = _context.Gigs.Find(gigId),
+                    AttendeeId = userId,
+                    GigId = gigId
+                };
+
+                _context.Entry(attendance).State = EntityState.Deleted;            
+            }
+            else
+            {
+                attendance = new Attendance
+                {
+                    GigId = dto.GigId,
+                    AttendeeId = userId
+                };
+
+                _context.Attendances.Add(attendance);
             }
 
-            Attendance attendance = new Attendance
-            {
-                GigId = gigId,
-                AttendeeId = userId
-            };
-
-            _context.Attendances.Add(attendance);
             _context.SaveChanges();
 
             return Ok();

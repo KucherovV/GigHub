@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using Microsoft.AspNet.Identity;
 using GigHub1.Models;
 
 namespace GigHub1.Controllers
@@ -20,6 +21,18 @@ namespace GigHub1.Controllers
                 .Include(g => g.Genre)
                 .Where(g => g.DateTime > DateTime.Now)
                 .ToList();
+
+            List<int> attendances = new List<int>();
+
+            foreach (Attendance att in _context.Attendances)
+            {
+                if(att.AttendeeId == User.Identity.GetUserId())
+                {
+                    attendances.Add(att.GigId);
+                }
+            }
+
+            ViewBag.Attendances = attendances;
 
             return View(upcomingGigs);
         }         

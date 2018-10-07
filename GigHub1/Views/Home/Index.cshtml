@@ -1,8 +1,16 @@
 ﻿@model IEnumerable<GigHub1.Models.Gig>
 @using System.Globalization;
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "Home Page";
     <link href="~/Content/Site.css" rel="stylesheet" />
+}
+
+
+@if (User.Identity.GetUserId() == null)
+{
+    
+    <p class="alert alert-info">Login first to subscribe for a gigs</p>
 }
 
 <ul class="gigs">
@@ -17,9 +25,28 @@
                     @gig.DateTime.ToString("d ")
                 </div>
             </div>
-            <button class="btn btn-default btn-sm">
-                Going?
-            </button>
+            @if (ViewBag.Attendances.Count == 0)
+            {
+                <button data-gig-id="@gig.Id" class="btn btn-default btn-sm js-toggle-attendance">
+                    Going?
+                </button>
+            }
+            else
+            {
+                if (ViewBag.Attendances.Contains(gig.Id))
+                {
+                    <button data-gig-id="@gig.Id" class="btn btn-info btn-sm js-toggle-attendance">
+                        Going
+                    </button>
+                }
+                else
+                {
+                    <button data-gig-id="@gig.Id" class="btn btn-default btn-sm js-toggle-attendance">
+                        Going?
+                    </button>
+                }
+            }
+           
             <div class="details">
                 <span class="artist">
                     @gig.Artist.Name
@@ -29,10 +56,40 @@
                 </span>
                 <span class="venue">
                     @gig.Venue
-                </span>
-                
+                </span>            
             </div>     
             <hr />
-        </li>
+        </li>     
     }
 </ul>
+
+@section scripts {
+    @if(User.Identity.GetUserId() != null)
+    {  
+    <script>   
+        $(document).ready(function () {
+            $(".js-toggle-attendance").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/attendances", { gigId: button.attr("data-gig-id") })
+                    .done(function () {
+                        if (button.hasClass("btn-info")) {
+                            button
+                                .removeClass("btn-info")
+                                .addClass("btn-default")
+                                .text("Going?")
+                        }
+                        else {
+                            button
+                                .removeClass("btn-default")
+                                .addClass("btn-info")
+                                .text("Going");
+                        }
+                    })
+                    .fail(function () {
+                    alert("Something failed");
+                });
+            });
+        });
+    </script>    
+    } 
+}
