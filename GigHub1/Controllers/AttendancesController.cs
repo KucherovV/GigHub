@@ -16,9 +16,8 @@ namespace GigHub1.Controllers
         public IHttpActionResult Attend(AttendanceDto dto)
         {
             var userId = User.Identity.GetUserId();
-
-            Attendance attendance;
             var gigId = dto.GigId;
+            Attendance attendance;
 
             if (_context.Attendances.Any(a => a.AttendeeId == userId && a.GigId == gigId))
             {

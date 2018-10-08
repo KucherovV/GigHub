@@ -23,7 +23,6 @@ namespace GigHub1.Controllers
                 .ToList();
 
             List<int> attendances = new List<int>();
-
             foreach (Attendance att in _context.Attendances)
             {
                 if(att.AttendeeId == User.Identity.GetUserId())
@@ -31,8 +30,17 @@ namespace GigHub1.Controllers
                     attendances.Add(att.GigId);
                 }
             }
-
             ViewBag.Attendances = attendances;
+
+            List<string> follows = new List<string>();
+            foreach(Follows fl in _context.Follows)
+            {
+                if(fl.FollowerId == User.Identity.GetUserId())
+                {
+                    follows.Add(fl.FollowingId);
+                }
+            }
+            ViewBag.Follows = follows;
 
             return View(upcomingGigs);
         }         

@@ -116,7 +116,7 @@ p {
     background: red;
     color: white;
     text-align: center;
-    width: 60px;
+    width: 70px;
     border-radius: 8px;
 }
 
@@ -137,7 +137,8 @@ p {
 .gigs > li .details {
     position: absolute;
     top: 0px;
-    left: 70px;
+    left: 80px;
+
 }
 
 .gigs > li .details .artist {
@@ -151,7 +152,7 @@ p {
 
 .gigs > li .details .venue {
     display: block;
-    margin-top: 24px;
+    margin-top: 54px;
 }
 
 ul {
@@ -165,10 +166,42 @@ ul hr {
     margin: 15px 0;
 }
 
-.gigs button {
+.gigs > li > .js-toggle-attendance {
     margin-top: 5px;
     font-weight: bold;
-    border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
-    width: 60px;
+    border-radius: 0px;
+    width: 70px;
+}
+
+.gigs .follow {
+    display: block;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    width: 70px;
+    margin-top: 0px;
+    font-weight: bold;
+}
+
+.gigs .follow.btn-info {
+    background-color: #ffa231;
+    border-color: orange;
+    color: white;
+    font-weight: 400;
+}
+
+.gigs > li > .btn-warning{
+    display: block;
+    border-radius: 6px;
+    width: 70px;
+    margin-top: 0px;
+    background: #ff4242;
+    border-color: #ff4242;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+} 
+
+:active, :hover, :focus{
+    outline: none;
+    box-shadow: none;
+    outline-color: transparent;   
 }

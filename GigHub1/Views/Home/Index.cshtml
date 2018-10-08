@@ -7,7 +7,7 @@
 }
 
 
-@if (User.Identity.GetUserId() == null)
+@if (!User.Identity.IsAuthenticated)
 {
     
     <p class="alert alert-info">Login first to subscribe for a gigs</p>
@@ -25,7 +25,7 @@
                     @gig.DateTime.ToString("d ")
                 </div>
             </div>
-            @if (ViewBag.Attendances.Count == 0)
+            @if (ViewBag.Attendances.Count == 0 || !ViewBag.Attendances.Contains(gig.Id))
             {
                 <button data-gig-id="@gig.Id" class="btn btn-default btn-sm js-toggle-attendance">
                     Going?
@@ -33,20 +33,34 @@
             }
             else
             {
-                if (ViewBag.Attendances.Contains(gig.Id))
+                <button data-gig-id="@gig.Id" class="btn btn-info btn-sm js-toggle-attendance">
+                    Going
+                </button>           
+            }
+            
+            @if (User.Identity.GetUserId() != gig.ArtistId)
+            {
+                if (ViewBag.Follows.Count == 0  || !ViewBag.Follows.Contains(gig.ArtistId))
                 {
-                    <button data-gig-id="@gig.Id" class="btn btn-info btn-sm js-toggle-attendance">
-                        Going
-                    </button>
+                <button data-following-id="@gig.ArtistId" class="btn btn-default btn-sm follow">
+                    Follow
+                </button>
                 }
                 else
                 {
-                    <button data-gig-id="@gig.Id" class="btn btn-default btn-sm js-toggle-attendance">
-                        Going?
-                    </button>
+                <button data-following-id="@gig.ArtistId" class="btn btn-info btn-sm follow">
+                    Followed
+                </button>
                 }
             }
-           
+            else
+            {
+                <button data-gig-id="@gig.Id" class="btn btn-warning btn-sm">
+                    Remove
+                </button>
+            }
+
+
             <div class="details">
                 <span class="artist">
                     @gig.Artist.Name
@@ -57,14 +71,14 @@
                 <span class="venue">
                     @gig.Venue
                 </span>            
-            </div>     
+            </div>                
             <hr />
         </li>     
     }
 </ul>
 
 @section scripts {
-    @if(User.Identity.GetUserId() != null)
+    @if(User.Identity.IsAuthenticated)
     {  
     <script>   
         $(document).ready(function () {
@@ -89,6 +103,35 @@
                     alert("Something failed");
                 });
             });
+
+            $(".follow").click(function (e) {
+                var button = $(e.target);
+                var idUser = button.attr("data-following-id");
+                var arrayButton = $(".follow[data-following-id='"+idUser+"']");
+                $.post("/api/follows", { followingId: button.attr("data-following-id") })
+                    .done(function () {                                                     
+                            if (arrayButton.hasClass("btn-info")) {
+                                arrayButton
+                                    .removeClass("btn-info")
+                                    .addClass("btn-default")
+                                    .text("Follow");
+                            }
+                            else {
+                                arrayButton
+                                    .removeClass("btn-default")
+                                    .addClass("btn-info")
+                                    .text("Followed");
+                            }
+                        
+                    })
+                    .fail(function () {
+                        alert("Someting failed");
+                    });
+            });
+
+            $(".btn-warning").click(function () {
+                alert("clicked");
+            })
         });
     </script>    
     } 
