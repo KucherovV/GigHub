@@ -199,6 +199,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AttendanceFilterController.cs" />
     <Compile Include="Controllers\FollowsController.cs" />
     <Compile Include="Dtos\AttendanceDto.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\FiltersEnabler.cs" />
     <Compile Include="Migrations\201810051852252_InitalModel.cs" />
     <Compile Include="Migrations\201810051852252_InitalModel.Designer.cs">
       <DependentUpon>201810051852252_InitalModel.cs</DependentUpon>
@@ -250,9 +252,18 @@
     <Compile Include="Migrations\201810071942244_CreateFollowsTable.Designer.cs">
       <DependentUpon>201810071942244_CreateFollowsTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810081418597_filterSettingsAdded.cs" />
+    <Compile Include="Migrations\201810081418597_filterSettingsAdded.Designer.cs">
+      <DependentUpon>201810081418597_filterSettingsAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810081422118_filterSettingsAdded1.cs" />
+    <Compile Include="Migrations\201810081422118_filterSettingsAdded1.Designer.cs">
+      <DependentUpon>201810081422118_filterSettingsAdded1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Attendance.cs" />
+    <Compile Include="Models\FilterSettings.cs" />
     <Compile Include="Models\Follows.cs" />
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\Gig.cs" />
@@ -263,6 +274,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\FutureDate.cs" />
     <Compile Include="ViewModels\GigFormViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\ValidTime.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -282,6 +294,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\IndexPageScriptsAuthorised.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -325,6 +338,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Gigs\Create.cshtml" />
+    <Content Include="Views\Gigs\Attending.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -370,6 +384,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810071942244_CreateFollowsTable.resx">
       <DependentUpon>201810071942244_CreateFollowsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810081418597_filterSettingsAdded.resx">
+      <DependentUpon>201810081418597_filterSettingsAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810081422118_filterSettingsAdded1.resx">
+      <DependentUpon>201810081422118_filterSettingsAdded1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

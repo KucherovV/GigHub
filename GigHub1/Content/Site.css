@@ -105,8 +105,9 @@ p {
     font-size: 17px;
 }
 
-
 /*Page-level styles*/
+
+
 
 .gigs > li {
     position: relative;
@@ -199,9 +200,3 @@ ul hr {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
 } 
-
-:active, :hover, :focus{
-    outline: none;
-    box-shadow: none;
-    outline-color: transparent;   
-}

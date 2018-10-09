@@ -1,138 +1,94 @@
-﻿@model IEnumerable<GigHub1.Models.Gig>
-@using System.Globalization;
-@using Microsoft.AspNet.Identity;
+﻿@model GigHub1.ViewModels.HomeViewModel
 @{
     ViewBag.Title = "Home Page";
     <link href="~/Content/Site.css" rel="stylesheet" />
 }
 
-
-@if (!User.Identity.IsAuthenticated)
-{
-    
+@if (!Model.ShowActions)
+{ 
     <p class="alert alert-info">Login first to subscribe for a gigs</p>
+}
+else
+{
+    string checkAttend = "";
+    if (Model.FiltratedByAttendance)
+    {
+        checkAttend = "checked";
+    }
+
+    <input type="checkbox" class="checkboxAttend" @checkAttend />
+    <span>Fitler by attending</span>
+
+    <input type="checkbox" class="checkboxFollow" />
+    <span>Filter by follows</span>
 }
 
 <ul class="gigs">
-    @foreach (var gig in Model)
+    @foreach (var gig in Model.UpcomingGigs)
     {
         <li>
-            <div class="date" >
-                <div class="month">
-                    @gig.DateTime.ToString("MMM", new CultureInfo("en-EN"))
-                </div>
-                <div class="day">
-                    @gig.DateTime.ToString("d ")
-                </div>
-            </div>
-            @if (ViewBag.Attendances.Count == 0 || !ViewBag.Attendances.Contains(gig.Id))
-            {
-                <button data-gig-id="@gig.Id" class="btn btn-default btn-sm js-toggle-attendance">
-                    Going?
-                </button>
-            }
-            else
-            {
-                <button data-gig-id="@gig.Id" class="btn btn-info btn-sm js-toggle-attendance">
-                    Going
-                </button>           
-            }
+                    <div class="date" >
+                        <div class="month">
+                            @gig.DateTime.ToString("MMM", Model.Culture)
+                        </div>
+                        <div class="day">
+                            @gig.DateTime.ToString("d ")
+                        </div>
+                    </div>
+
+                    @if (Model.Atendances.Count() == 0 || !Model.Atendances.Contains(gig.Id))
+                    {
+                        <button data-gig-id="@gig.Id" class="btn btn-default btn-sm js-toggle-attendance">
+                            Going?
+                        </button>
+                    }
+                    else
+                    {
+                        <button data-gig-id="@gig.Id" class="btn btn-info btn-sm js-toggle-attendance">
+                            Going
+                        </button>           
+                    }
             
-            @if (User.Identity.GetUserId() != gig.ArtistId)
-            {
-                if (ViewBag.Follows.Count == 0  || !ViewBag.Follows.Contains(gig.ArtistId))
-                {
-                <button data-following-id="@gig.ArtistId" class="btn btn-default btn-sm follow">
-                    Follow
-                </button>
-                }
-                else
-                {
-                <button data-following-id="@gig.ArtistId" class="btn btn-info btn-sm follow">
-                    Followed
-                </button>
-                }
-            }
-            else
-            {
-                <button data-gig-id="@gig.Id" class="btn btn-warning btn-sm">
-                    Remove
-                </button>
-            }
+                    @if (Model.AppUserId != gig.ArtistId)
+                    {
+                        if (Model.Follows.Count() == 0 || !Model.Follows.Contains(gig.ArtistId))
+                        {
+                        <button data-following-id="@gig.ArtistId" class="btn btn-default btn-sm follow">
+                            Follow
+                        </button>
+                        }
+                        else
+                        {
+                        <button data-following-id="@gig.ArtistId" class="btn btn-info btn-sm follow">
+                            Followed
+                        </button>
+                        }
+                    }
+                    else
+                    {
+                        <button data-gig-id="@gig.Id" class="btn btn-warning btn-sm">
+                            Remove
+                        </button>
+                    }
 
-
-            <div class="details">
-                <span class="artist">
-                    @gig.Artist.Name
-                </span>
-                <span class="genre">
-                    @gig.Genre.Name
-                </span>
-                <span class="venue">
-                    @gig.Venue
-                </span>            
-            </div>                
-            <hr />
-        </li>     
+                    <div class="details">
+                        <span class="artist">
+                            @gig.Artist.Name
+                        </span>
+                        <span class="genre">
+                            @gig.Genre.Name
+                        </span>
+                        <span class="venue">
+                            @gig.Venue
+                        </span>            
+                    </div>            
+                    <hr />
+                </li>
     }
 </ul>
-
 @section scripts {
-    @if(User.Identity.IsAuthenticated)
-    {  
-    <script>   
-        $(document).ready(function () {
-            $(".js-toggle-attendance").click(function (e) {
-                var button = $(e.target);
-                $.post("/api/attendances", { gigId: button.attr("data-gig-id") })
-                    .done(function () {
-                        if (button.hasClass("btn-info")) {
-                            button
-                                .removeClass("btn-info")
-                                .addClass("btn-default")
-                                .text("Going?")
-                        }
-                        else {
-                            button
-                                .removeClass("btn-default")
-                                .addClass("btn-info")
-                                .text("Going");
-                        }
-                    })
-                    .fail(function () {
-                    alert("Something failed");
-                });
-            });
-
-            $(".follow").click(function (e) {
-                var button = $(e.target);
-                var idUser = button.attr("data-following-id");
-                var arrayButton = $(".follow[data-following-id='"+idUser+"']");
-                $.post("/api/follows", { followingId: button.attr("data-following-id") })
-                    .done(function () {                                                     
-                            if (arrayButton.hasClass("btn-info")) {
-                                arrayButton
-                                    .removeClass("btn-info")
-                                    .addClass("btn-default")
-                                    .text("Follow");
-                            }
-                            else {
-                                arrayButton
-                                    .removeClass("btn-default")
-                                    .addClass("btn-info")
-                                    .text("Followed");
-                            }
-                        
-                    })
-                    .fail(function () {
-                        alert("Someting failed");
-                    });
-            });
-
-            $(".btn-warning").click(function () {
-                alert("clicked");
-            })
-        });
-    </script>    
+    @if (Model.ShowActions)
+    {
+        <script src="~/Scripts/IndexPageScriptsAuthorised.js"></script>
     } 
 }

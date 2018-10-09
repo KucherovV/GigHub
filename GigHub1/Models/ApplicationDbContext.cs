@@ -13,6 +13,7 @@ namespace GigHub1.Models
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Follows> Follows { get; set; }
+        public DbSet<FilterSettings> FilterSettings { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

@@ -1,0 +1,78 @@
+﻿@model GigHub1.ViewModels.HomeViewModel
+@{
+    ViewBag.Title = "Attending";
+}
+
+<h2>Attending</h2>
+
+
+<ul class="gigs">
+    @foreach (var gig in Model.UpcomingGigs)
+    {
+        string attend = "";
+        if (Model.Atendances.Contains(gig.Id))
+        {
+            attend = "attend";
+        }
+
+        <li class="@attend">
+
+            <div class="date">
+                <div class="month">
+                    @gig.DateTime.ToString("MMM", Model.Culture)
+                </div>
+                <div class="day">
+                    @gig.DateTime.ToString("d ")
+                </div>
+            </div>
+
+            @if (Model.Atendances.Count() == 0 || !Model.Atendances.Contains(gig.Id))
+            {
+                <button data-gig-id="@gig.Id" class="btn btn-default btn-sm js-toggle-attendance">
+                    Going?
+                </button>
+            }
+            else
+            {
+                <button data-gig-id="@gig.Id" class="btn btn-info btn-sm js-toggle-attendance">
+                    Going
+                </button>
+            }
+
+            @if (Model.AppUserId != gig.ArtistId)
+            {
+                if (Model.Follows.Count() == 0 || !Model.Follows.Contains(gig.ArtistId))
+                {
+                    <button data-following-id="@gig.ArtistId" class="btn btn-default btn-sm follow">
+                        Follow
+                    </button>
+                }
+                else
+                {
+                    <button data-following-id="@gig.ArtistId" class="btn btn-info btn-sm follow">
+                        Followed
+                    </button>
+                }
+            }
+            else
+            {
+                <button data-gig-id="@gig.Id" class="btn btn-warning btn-sm">
+                    Remove
+                </button>
+            }
+
+            <div class="details">
+                <span class="artist">
+                    @gig.Artist.Name
+                </span>
+                <span class="genre">
+                    @gig.Genre.Name
+                </span>
+                <span class="venue">
+                    @gig.Venue
+                </span>
+            </div>
+            <hr />
+        </li>
+    }
+</ul>
